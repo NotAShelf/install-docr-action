@@ -6,8 +6,10 @@ const core = require('@actions/core')
 const http = require('https')
 const { createGunzip } = require('zlib')
 const { exec } = require('child_process')
+const emitter = require('events').EventEmitter
 
-process.setMaxListeners(20)
+// process.setMaxListeners(50)
+emitter.setMaxListeners(50)
 
 /**
  * Downloads a file from a given URL and saves it to the destination.

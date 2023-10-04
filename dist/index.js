@@ -2895,8 +2895,10 @@ const core = __nccwpck_require__(186)
 const http = __nccwpck_require__(687)
 const { createGunzip } = __nccwpck_require__(796)
 const { exec } = __nccwpck_require__(81)
+const emitter = (__nccwpck_require__(361).EventEmitter)
 
-process.setMaxListeners(20)
+// process.setMaxListeners(50)
+emitter.setMaxListeners(50)
 
 /**
  * Downloads a file from a given URL and saves it to the destination.

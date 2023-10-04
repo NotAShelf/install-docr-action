@@ -48,7 +48,7 @@ jobs:
 
       - name: Test Action Locally
         id: test-action
-        uses: notashelf/install-docr-action@main
+        uses: ./
         with:
           github-repo: 'notashelf/docr'
           install-dir: './'
