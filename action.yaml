@@ -1,4 +1,4 @@
-name: 'Docr Installer Action'
+name: 'Install Docr Action'
 description: 'Install a published Docr release'
 author: 'NotAShelf'
 
@@ -53,5 +53,5 @@ outputs:
     description: 'The installed version'
 
 runs:
-  using: node20
-  main: dist/index.js
+  using: 'node20'
+  main: 'dist/index.js'
