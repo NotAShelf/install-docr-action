@@ -3,16 +3,22 @@
   "description": "A streamlined installer for installing Docr SSG",
   "version": "0.0.1",
   "author": "NotAShelf",
-  "private": true,
-  "homepage": "https://github.com/notashelf/install-docr-action",
+  "license": "MIT",
+  "homepage": "https://github.com/notashelf/docr-install-action",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/notashelf/install-docr-action.git"
+    "url": "git+https://github.com/notashelf/docr-install-action.git"
   },
   "bugs": {
     "url": "https://github.com/notashelf/install-docr-action/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "Docr",
+    "SSG",
+    "Static Site Generator",
+    "GitHub Actions",
+    "Workflow"
+  ],
   "exports": {
     ".": "./dist/index.js"
   },
@@ -28,14 +34,12 @@
     "package:watch": "npm run package -- --watch",
     "all": "npm run format:write && npm run lint && npm run package"
   },
-  "license": "MIT",
   "eslintConfig": {
     "extends": "./.github/linters/.eslintrc.yml"
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "axios": "^1.5.1",
-    "tar": "^6.2.0"
+    "axios": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
