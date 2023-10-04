@@ -2726,9 +2726,8 @@ exports["default"] = _default;
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(186)
-const axios = __nccwpck_require__(778)
 const fs = (__nccwpck_require__(147).promises)
-const http = __nccwpck_require__(685)
+const http = __nccwpck_require__(687)
 const { createGunzip } = __nccwpck_require__(796)
 
 async function downloadFile(url, dest) {
@@ -2779,8 +2778,36 @@ async function run() {
     const timestampsFromFilename = core.getInput('timestamps-from-filename')
 
     const apiUrl = `https://api.github.com/repos/${githubRepo}/releases/latest`
-    const response = await axios.get(apiUrl)
-    const tag = response.data.tag_name
+    const requestOptions = {
+      headers: {
+        'User-Agent': 'Custom-Installer-Action'
+      }
+    }
+
+    // API request using 'https' module
+    const response = await new Promise((resolve, reject) => {
+      http
+        .get(apiUrl, requestOptions, response => {
+          let data = ''
+          response.on('data', chunk => {
+            data += chunk
+          })
+          response.on('end', () => {
+            if (response.statusCode === 200) {
+              resolve(JSON.parse(data))
+            } else {
+              reject(
+                new Error(
+                  `API request failed with status ${response.statusCode}`
+                )
+              )
+            }
+          })
+        })
+        .on('error', reject)
+    })
+
+    const tag = response.tag_name
     const cleanTag = tag.replace('v', '')
 
     core.setOutput('installed-version', cleanTag)
@@ -2800,7 +2827,7 @@ async function run() {
     await untarFile('docr.tar.gz', installDir)
     await untarFile('templates.tar.gz', installDir)
 
-    // Write your installer's settings
+    // installer settings
     const settings = {
       githubUsername,
       websiteName,
@@ -2822,14 +2849,6 @@ async function run() {
 }
 
 run()
-
-
-/***/ }),
-
-/***/ 778:
-/***/ ((module) => {
-
-module.exports = eval("require")("axios");
 
 
 /***/ }),
@@ -2979,9 +2998,6 @@ module.exports = require("zlib");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/**
- * The entrypoint for the action.
- */
 const { run } = __nccwpck_require__(713)
 
 run()
