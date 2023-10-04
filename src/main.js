@@ -1,7 +1,6 @@
 const core = require('@actions/core')
-const axios = require('axios')
 const fs = require('fs').promises
-const http = require('http')
+const http = require('https')
 const { createGunzip } = require('zlib')
 
 async function downloadFile(url, dest) {
@@ -52,8 +51,36 @@ async function run() {
     const timestampsFromFilename = core.getInput('timestamps-from-filename')
 
     const apiUrl = `https://api.github.com/repos/${githubRepo}/releases/latest`
-    const response = await axios.get(apiUrl)
-    const tag = response.data.tag_name
+    const requestOptions = {
+      headers: {
+        'User-Agent': 'Custom-Installer-Action'
+      }
+    }
+
+    // API request using 'https' module
+    const response = await new Promise((resolve, reject) => {
+      http
+        .get(apiUrl, requestOptions, response => {
+          let data = ''
+          response.on('data', chunk => {
+            data += chunk
+          })
+          response.on('end', () => {
+            if (response.statusCode === 200) {
+              resolve(JSON.parse(data))
+            } else {
+              reject(
+                new Error(
+                  `API request failed with status ${response.statusCode}`
+                )
+              )
+            }
+          })
+        })
+        .on('error', reject)
+    })
+
+    const tag = response.tag_name
     const cleanTag = tag.replace('v', '')
 
     core.setOutput('installed-version', cleanTag)
@@ -73,7 +100,7 @@ async function run() {
     await untarFile('docr.tar.gz', installDir)
     await untarFile('templates.tar.gz', installDir)
 
-    // Write your installer's settings
+    // installer settings
     const settings = {
       githubUsername,
       websiteName,
