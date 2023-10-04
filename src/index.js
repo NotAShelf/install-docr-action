@@ -8,7 +8,7 @@ const { createGunzip } = require('zlib')
 const { exec } = require('child_process')
 const emitter = require('events').EventEmitter
 
-// Increase the maximum event listeners for the EventEmitter
+// process.setMaxListeners(50)
 emitter.setMaxListeners(50)
 
 /**
@@ -21,17 +21,24 @@ emitter.setMaxListeners(50)
 async function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
     const file = createWriteStream(dest)
-    http
-      .get(url, response => {
+    const request = http.get(url, response => {
+      if (response.statusCode === 200) {
         response.pipe(file)
         file.on('finish', () => {
           file.close(resolve)
         })
-      })
-      .on('error', err => {
-        fs.unlink(dest)
+      } else {
+        reject(
+          new Error(`HTTP request failed with status ${response.statusCode}`)
+        )
+      }
+    })
+
+    request.on('error', err => {
+      fs.unlink(dest, () => {
         reject(err)
       })
+    })
   })
 }
 
@@ -122,14 +129,14 @@ async function run() {
       `Two files will be downloaded: docr_${cleanTag}_linux_amd64.tar.gz and templates.tar.gz`
     )
 
-    // Download and extract docr.tar.gz
-    await downloadFile(
+    // Download and extract docr.tar.gz with retries
+    await downloadFileWithRetry(
       `${url}/docr_${cleanTag}_linux_amd64.tar.gz`,
       'docr.tar.gz'
     )
 
-    // Download and extract templates.tar.gz
-    await downloadFile(`${url}/templates.tar.gz`, 'templates.tar.gz')
+    // Download and extract templates.tar.gz with retries
+    await downloadFileWithRetry(`${url}/templates.tar.gz`, 'templates.tar.gz')
 
     // Use exec to extract the tar.gz file
     await untarFile('docr.tar.gz', installDir)
@@ -156,4 +163,29 @@ async function run() {
   }
 }
 
+async function downloadFileWithRetry(
+  url,
+  dest,
+  maxRetries = 3,
+  retryDelay = 1000
+) {
+  let retries = 0
+  while (retries < maxRetries) {
+    try {
+      await downloadFile(url, dest)
+      return // Download successful, exit loop
+    } catch (error) {
+      console.error(
+        `Error downloading file (retry ${retries + 1}/${maxRetries}): ${
+          error.message
+        }`
+      )
+      retries++
+      await new Promise(resolve => setTimeout(resolve, retryDelay)) // Wait before retrying
+    }
+  }
+  throw new Error(`Failed to download file after ${maxRetries} retries.`)
+}
+
+// Run the main function
 run()
