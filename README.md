@@ -13,24 +13,26 @@
 Values below will be used to write your `settings.json` in the same directory as
 the `Docr` executable.
 
-| Option                     | Description                                                                                | Required |     Default      |
-| :------------------------- | :----------------------------------------------------------------------------------------- | :------: | :--------------: |
-| `github-repo`              | The GitHub repository (e.g., owner/repo) to fetch releases from.                           |   :x:    | `NotAShelf/Docr` |
-| `install-dir`              | The installation directory for your application. Defaults to current directory             |   :x:    |       `./`       |
-| `github-username`          | Your GitHub username to be displayed on generated pages                                    | :check:  |      `N/A`       |
-| `website-name`             | A short name for your website or application, will be displayed on pages                   | :check:  |      `N/A`       |
-| `template-dir`             | The directory where templates are stored                                                   |   :x:    |   `templates/`   |
-| `markdown-dir`             | The directory where markdown files will be stored                                          |   :x:    |   `markdown/`    |
-| `output-dir`               | The directory to place generated html files to. Useful for serving static pages over Pages |   :x:    |    `output/`     |
-| `website-url`              | Root URL of your website. Will be used for RSS feeds and buttons                           | :check:  |      `N/A`       |
-| `website-description`      | Meta description of your website. Useful for setting embed descriptions                    | :check:  |      `N/A`       |
-| `timestamps-from-filename` | Whether to extract timestamps from filenames that are named `title-dd-mm-yyyy.md`          |   :x:    |      `true`      |
+| Option                     | Description                                                                                |      Required      |     Default      |
+| :------------------------- | :----------------------------------------------------------------------------------------- | :----------------: | :--------------: |
+| `github-repo`              | The GitHub repository (e.g., owner/repo) to fetch releases from.                           |        :x:         | `NotAShelf/Docr` |
+| `install-dir`              | The installation directory for your application. Defaults to current directory             |        :x:         |       `./`       |
+| `github-username`          | Your GitHub username to be displayed on generated pages                                    | :white_check_mark: |      `N/A`       |
+| `website-name`             | A short name for your website or application, will be displayed on pages                   | :white_check_mark: |      `N/A`       |
+| `template-dir`             | The directory where templates are stored                                                   |        :x:         |   `templates/`   |
+| `markdown-dir`             | The directory where markdown files will be stored                                          |        :x:         |   `markdown/`    |
+| `output-dir`               | The directory to place generated html files to. Useful for serving static pages over Pages |        :x:         |    `output/`     |
+| `website-url`              | Root URL of your website. Will be used for RSS feeds and buttons                           | :white_check_mark: |      `N/A`       |
+| `website-description`      | Meta description of your website. Useful for setting embed descriptions                    | :white_check_mark: |      `N/A`       |
+| `timestamps-from-filename` | Whether to extract timestamps from filenames that are named `title-dd-mm-yyyy.md`          |        :x:         |      `true`      |
 
-### Outputs
+### Output
 
 - installed-version: The installed version of your application.
 
 ## Developing
+
+All contributions are welcome.
 
 After you've cloned the repository to your local machine or codespace, you'll
 need to perform some initial setup steps before you can develop your action.
@@ -44,8 +46,8 @@ need to perform some initial setup steps before you can develop your action.
 > root of your repository to install the version specified in
 > [`package.json`](./package.json). Otherwise, 20.x or later should work!
 
-All contributions are welcome. Nix users may use the provided `flake.nix` for
-automatically setting up a convenient dev env.
+Nix users may use the provided `flake.nix` for automatically setting up a
+convenient dev env.
 
 ### Testing
 
