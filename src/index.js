@@ -8,7 +8,7 @@ const { createGunzip } = require('zlib')
 const { exec } = require('child_process')
 const emitter = require('events').EventEmitter
 
-// process.setMaxListeners(50)
+// Increase the maximum event listeners for the EventEmitter
 emitter.setMaxListeners(50)
 
 /**
@@ -76,6 +76,8 @@ async function run() {
     const websiteDescription = core.getInput('website-description')
     const timestampsFromFilename = core.getInput('timestamps-from-filename')
 
+    // Request the latest release from the GitHub API with a custom User-Agent header
+    // https://docs.github.com/en/rest/reference/repos#get-the-latest-release
     const apiUrl = `https://api.github.com/repos/${githubRepo}/releases/latest`
     const requestOptions = {
       headers: {
@@ -84,6 +86,7 @@ async function run() {
     }
 
     // API request using 'https' module
+    // catch the status code if the request fails
     const apiResponse = await new Promise((resolve, reject) => {
       http
         .get(apiUrl, requestOptions, response => {
@@ -111,6 +114,7 @@ async function run() {
 
     core.setOutput('installed-version', cleanTag)
 
+    // Construct the download URL using the tag and repo URL (i.e NotAShelf/Docr)
     const url = `https://github.com/${githubRepo}/releases/download/${tag}`
     core.info(`Constructed download URL: ${url}`)
 
