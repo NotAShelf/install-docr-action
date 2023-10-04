@@ -7,6 +7,13 @@ const { createGunzip } = require('zlib')
 
 process.setMaxListeners(20)
 
+/**
+ * Downloads a file from a given URL and saves it to the destination.
+ *
+ * @param {string} url - The URL of the file to download.
+ * @param {string} dest - The destination path to save the downloaded file.
+ * @returns {Promise<void>} - A Promise that resolves when the download is complete.
+ */
 async function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
     const file = createFileStream(dest)
@@ -24,6 +31,13 @@ async function downloadFile(url, dest) {
   })
 }
 
+/**
+ * Untars a Gzipped tar file to a specified target directory.
+ *
+ * @param {string} tarFile - The path to the tar.gz file to untar.
+ * @param {string} targetDir - The target directory to extract the contents to.
+ * @returns {Promise<void>} - A Promise that resolves when the untar process is complete.
+ */
 async function untarFile(tarFile, targetDir) {
   return new Promise((resolve, reject) => {
     const tarStream = fs.createReadStream(tarFile).pipe(createGunzip())
@@ -41,6 +55,9 @@ async function untarFile(tarFile, targetDir) {
   })
 }
 
+/**
+ * Main function to execute the GitHub Action.
+ */
 async function run() {
   try {
     const githubRepo = core.getInput('github-repo')
