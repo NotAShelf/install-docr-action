@@ -1,51 +1,58 @@
 name: 'Install Docr Action'
 description: 'Install a published Docr release'
 author: 'NotAShelf'
-
+branding:
+  icon: 'box'
+  color: 'purple'
 inputs:
+  github_token:
+    description:
+      The GitHub token used to create an authenticated client - Provided for you
+      by default!
+    default: ${{ github.token }}
+    required: false
   github-repo:
-    description: 'GitHub repository (e.g., owner/repo) to fetch releases from'
+    description: GitHub repository (e.g., owner/repo) to fetch releases from
+    required: true
     default: 'NotAShelf/Docr'
-
   install-dir:
-    description: 'Installation directory'
+    description: Installation directory
+    required: true
     default: './'
-
   template-dir:
-    description: 'HTML/Css Templates directory'
-    defualt: 'templates'
-
+    description: HTML/CSS Templates directory
+    required: true
+    default: 'templates'
   markdown-dir:
-    description: 'Markdown directory'
+    description: Markdown directory
+    required: true
     default: 'markdown'
-
   output-dir:
-    description: 'Output directory'
+    description: Output directory
+    required: true
     default: 'output'
-
   github-username:
-    description: 'GitHub username'
+    description: GitHub username
     required: true
-
   website-name:
-    description: 'Website name'
+    description: Website name
     required: true
-
   website-url:
-    description: 'Website URL'
+    description: Website URL
     required: true
-
   website-description:
-    description: 'Website description'
+    description: Website description
     required: true
-
   timestamps-from-filename:
-    description: 'Extract timestamps from filename (true/false)'
+    description: Extract timestamps from filename (true/false)
     required: true
 outputs:
   installed-version:
-    description: 'The installed version'
-
+    description: The installed version
+  success:
+    description: |
+      Whether or not the validation was successful for all files -
+      "true" or "false"
 runs:
   using: 'node20'
   main: 'dist/index.js'
