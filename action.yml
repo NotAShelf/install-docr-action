@@ -10,6 +10,7 @@ inputs:
   install-dir:
     description: 'Installation directory'
     required: true
+    default: './'
 
   github-username:
     description: 'GitHub username'

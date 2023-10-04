@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - "releases/*"
+      - 'releases/*'
 
 jobs:
   test-javascript:
@@ -53,7 +53,16 @@ jobs:
         id: test-action
         uses: ./
         with:
-          milliseconds: 1000
+          github-repo: 'notashelf/docr'
+          install-dir: './'
+          github-username: 'NotAShelf'
+          website-name: 'NotAShelf Notes'
+          template-dir: 'templates'
+          markdown-dir: 'docs/notes'
+          output-dir: 'static'
+          website-url: 'https://notashelf.github.io/nyx'
+          website-description: 'NotAShelf Notes on Various Topics'
+          timestamps-from-filename: true
 
       - name: Print Output
         id: output
