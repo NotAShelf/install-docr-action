@@ -6,11 +6,27 @@ inputs:
   github-repo:
     description: 'GitHub repository (e.g., owner/repo) to fetch releases from'
     required: true
+    default: 'NotAShelf/Docr'
 
   install-dir:
     description: 'Installation directory'
     required: true
     default: './'
+
+  template-dir:
+    description: 'HTML/Css Templates directory'
+    required: true
+    defualt: 'templates'
+
+  markdown-dir:
+    description: 'Markdown directory'
+    required: true
+    default: 'markdown'
+
+  output-dir:
+    description: 'Output directory'
+    required: true
+    default: 'output'
 
   github-username:
     description: 'GitHub username'
@@ -18,18 +34,6 @@ inputs:
 
   website-name:
     description: 'Website name'
-    required: true
-
-  template-dir:
-    description: 'Template directory'
-    required: true
-
-  markdown-dir:
-    description: 'Markdown directory'
-    required: true
-
-  output-dir:
-    description: 'Output directory'
     required: true
 
   website-url:
@@ -41,7 +45,7 @@ inputs:
     required: true
 
   timestamps-from-filename:
-    description: 'Timestamps from filename (true/false)'
+    description: 'Extract timestamps from filename (true/false)'
     required: true
 
 outputs:
