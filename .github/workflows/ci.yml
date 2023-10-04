@@ -6,7 +6,10 @@ on:
   push:
     branches:
       - main
-      - 'releases/*'
+      - 'v*'
+    paths:
+      - '**/*.js'
+      - '.github/workflows/ci.yml'
 
 jobs:
   test-javascript:
