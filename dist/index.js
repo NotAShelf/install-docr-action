@@ -2816,14 +2816,6 @@ module.exports = require("tls");
 "use strict";
 module.exports = require("util");
 
-/***/ }),
-
-/***/ 796:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("zlib");
-
 /***/ })
 
 /******/ 	});
@@ -2884,20 +2876,23 @@ __nccwpck_require__.r(__webpack_exports__);
 
 ;// CONCATENATED MODULE: external "fs/promises"
 const promises_namespaceObject = require("fs/promises");
+;// CONCATENATED MODULE: external "zlib"
+const external_zlib_namespaceObject = require("zlib");
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(147);
 ;// CONCATENATED MODULE: ./src/index.js
 
 
-const fs = __nccwpck_require__(147)
 
+
+
+const fs = __nccwpck_require__(147)
 const core = __nccwpck_require__(186)
-const http = __nccwpck_require__(687)
-const { createGunzip } = __nccwpck_require__(796)
+const https = __nccwpck_require__(687)
 const { exec } = __nccwpck_require__(81)
 const emitter = (__nccwpck_require__(361).EventEmitter)
 
-// process.setMaxListeners(50)
+// Increase the maximum event listeners for the EventEmitter
 emitter.setMaxListeners(50)
 
 /**
@@ -2910,7 +2905,7 @@ emitter.setMaxListeners(50)
 async function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
     const file = (0,external_fs_.createWriteStream)(dest)
-    const request = http.get(url, response => {
+    const request = https.get(url, { followRedirect: true }, response => {
       if (response.statusCode === 200) {
         response.pipe(file)
         file.on('finish', () => {
@@ -2928,6 +2923,9 @@ async function downloadFile(url, dest) {
         reject(err)
       })
     })
+
+    // Log the actual URL from which the download is attempted
+    core.info(`Downloading from URL: ${request.path}`)
   })
 }
 
@@ -2940,7 +2938,7 @@ async function downloadFile(url, dest) {
  */
 async function untarFile(tarFile, targetDir) {
   return new Promise((resolve, reject) => {
-    const tarStream = (0,external_fs_.createReadStream)(tarFile).pipe(createGunzip())
+    const tarStream = (0,external_fs_.createReadStream)(tarFile).pipe((0,external_zlib_namespaceObject.createGunzip)())
     tarStream.on('error', err => {
       reject(err)
     })
@@ -2978,13 +2976,14 @@ async function run() {
     const requestOptions = {
       headers: {
         'User-Agent': 'Custom-Installer-Action'
-      }
+      },
+      followRedirect: true // Enable following redirects
     }
 
     // API request using 'https' module
     // catch the status code if the request fails
     const apiResponse = await new Promise((resolve, reject) => {
-      http
+      https
         .get(apiUrl, requestOptions, response => {
           let data = ''
           response.on('data', chunk => {
@@ -3062,15 +3061,18 @@ async function downloadFileWithRetry(
   while (retries < maxRetries) {
     try {
       await downloadFile(url, dest)
-      return // Download successful, exit loop
+      return // Successfully downloaded
     } catch (error) {
-      console.error(
-        `Error downloading file (retry ${retries + 1}/${maxRetries}): ${
-          error.message
-        }`
+      core.warning(
+        `Error downloading file from ${url} (retry ${
+          retries + 1
+        }/${maxRetries}): ${error.message}`
       )
       retries++
-      await new Promise(resolve => setTimeout(resolve, retryDelay)) // Wait before retrying
+      if (retries < maxRetries) {
+        core.info(`Retrying in ${retryDelay / 1000} seconds...`)
+        await new Promise(resolve => setTimeout(resolve, retryDelay))
+      }
     }
   }
   throw new Error(`Failed to download file after ${maxRetries} retries.`)
