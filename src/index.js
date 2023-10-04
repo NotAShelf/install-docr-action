@@ -1,11 +1,15 @@
+import { writeFile, createFileStream } from 'fs'
+const fs = require('fs')
+
 const core = require('@actions/core')
-const fs = require('fs').promises
 const http = require('https')
 const { createGunzip } = require('zlib')
 
+process.setMaxListeners(20)
+
 async function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(dest)
+    const file = createFileStream(dest)
     http
       .get(url, response => {
         response.pipe(file)
@@ -112,10 +116,7 @@ async function run() {
       timestampsFromFilename: timestampsFromFilename === 'true'
     }
 
-    await fs.writeFile(
-      `${installDir}/settings.json`,
-      JSON.stringify(settings, null, 2)
-    )
+    writeFile(`${installDir}/settings.json`, JSON.stringify(settings, null, 2))
   } catch (error) {
     core.setFailed(error.message)
   }
