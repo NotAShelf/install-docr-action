@@ -58,7 +58,7 @@ async function run() {
     }
 
     // API request using 'https' module
-    const response = await new Promise((resolve, reject) => {
+    const apiResponse = await new Promise((resolve, reject) => {
       http
         .get(apiUrl, requestOptions, response => {
           let data = ''
@@ -80,7 +80,7 @@ async function run() {
         .on('error', reject)
     })
 
-    const tag = response.tag_name
+    const tag = apiResponse.tag_name
     const cleanTag = tag.replace('v', '')
 
     core.setOutput('installed-version', cleanTag)
@@ -119,5 +119,6 @@ async function run() {
   } catch (error) {
     core.setFailed(error.message)
   }
-  run()
 }
+
+run()

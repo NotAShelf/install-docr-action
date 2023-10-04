@@ -1,5 +1,5 @@
 {
-  "name": "docr-install-action",
+  "name": "install-docr-action",
   "description": "A streamlined installer for installing Docr SSG",
   "version": "0.0.1",
   "author": "NotAShelf",
