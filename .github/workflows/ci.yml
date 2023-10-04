@@ -46,9 +46,9 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Test Local Action
+      - name: Test Action Locally
         id: test-action
-        uses: ./
+        uses: notashelf/install-docr-action@main
         with:
           github-repo: 'notashelf/docr'
           install-dir: './'
