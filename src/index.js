@@ -5,6 +5,7 @@ const fs = require('fs')
 const core = require('@actions/core')
 const http = require('https')
 const { createGunzip } = require('zlib')
+const { exec } = require('child_process')
 
 process.setMaxListeners(20)
 
@@ -42,16 +43,17 @@ async function downloadFile(url, dest) {
 async function untarFile(tarFile, targetDir) {
   return new Promise((resolve, reject) => {
     const tarStream = createReadStream(tarFile).pipe(createGunzip())
-    const extract = require('tar').Extract({ path: targetDir })
-
-    tarStream.pipe(extract)
-
-    extract.on('end', () => {
-      resolve()
+    tarStream.on('error', err => {
+      reject(err)
     })
 
-    extract.on('error', err => {
-      reject(err)
+    const untarCmd = `tar -xzvf ${tarFile} -C ${targetDir}`
+    exec(untarCmd, (error, stdout, stderr) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
     })
   })
 }
@@ -114,11 +116,16 @@ async function run() {
       `Two files will be downloaded: docr_${cleanTag}_linux_amd64.tar.gz and templates.tar.gz`
     )
 
+    // Download and extract docr.tar.gz
     await downloadFile(
       `${url}/docr_${cleanTag}_linux_amd64.tar.gz`,
       'docr.tar.gz'
     )
+
+    // Download and extract templates.tar.gz
     await downloadFile(`${url}/templates.tar.gz`, 'templates.tar.gz')
+
+    // Use exec to extract the tar.gz file
     await untarFile('docr.tar.gz', installDir)
     await untarFile('templates.tar.gz', installDir)
 
@@ -134,7 +141,10 @@ async function run() {
       timestampsFromFilename: timestampsFromFilename === 'true'
     }
 
-    writeFile(`${installDir}/settings.json`, JSON.stringify(settings, null, 2))
+    await writeFile(
+      `${installDir}/settings.json`,
+      JSON.stringify(settings, null, 2)
+    )
   } catch (error) {
     core.setFailed(error.message)
   }

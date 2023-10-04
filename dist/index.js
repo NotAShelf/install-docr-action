@@ -2722,19 +2722,19 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 428:
-/***/ ((module) => {
-
-module.exports = eval("require")("tar");
-
-
-/***/ }),
-
 /***/ 491:
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 81:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
@@ -2894,6 +2894,7 @@ const fs = __nccwpck_require__(147)
 const core = __nccwpck_require__(186)
 const http = __nccwpck_require__(687)
 const { createGunzip } = __nccwpck_require__(796)
+const { exec } = __nccwpck_require__(81)
 
 process.setMaxListeners(20)
 
@@ -2931,16 +2932,17 @@ async function downloadFile(url, dest) {
 async function untarFile(tarFile, targetDir) {
   return new Promise((resolve, reject) => {
     const tarStream = (0,external_fs_.createReadStream)(tarFile).pipe(createGunzip())
-    const extract = (__nccwpck_require__(428).Extract)({ path: targetDir })
-
-    tarStream.pipe(extract)
-
-    extract.on('end', () => {
-      resolve()
+    tarStream.on('error', err => {
+      reject(err)
     })
 
-    extract.on('error', err => {
-      reject(err)
+    const untarCmd = `tar -xzvf ${tarFile} -C ${targetDir}`
+    exec(untarCmd, (error, stdout, stderr) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
     })
   })
 }
@@ -3003,11 +3005,16 @@ async function run() {
       `Two files will be downloaded: docr_${cleanTag}_linux_amd64.tar.gz and templates.tar.gz`
     )
 
+    // Download and extract docr.tar.gz
     await downloadFile(
       `${url}/docr_${cleanTag}_linux_amd64.tar.gz`,
       'docr.tar.gz'
     )
+
+    // Download and extract templates.tar.gz
     await downloadFile(`${url}/templates.tar.gz`, 'templates.tar.gz')
+
+    // Use exec to extract the tar.gz file
     await untarFile('docr.tar.gz', installDir)
     await untarFile('templates.tar.gz', installDir)
 
@@ -3023,7 +3030,10 @@ async function run() {
       timestampsFromFilename: timestampsFromFilename === 'true'
     }
 
-    ;(0,promises_namespaceObject.writeFile)(`${installDir}/settings.json`, JSON.stringify(settings, null, 2))
+    await (0,promises_namespaceObject.writeFile)(
+      `${installDir}/settings.json`,
+      JSON.stringify(settings, null, 2)
+    )
   } catch (error) {
     core.setFailed(error.message)
   }
