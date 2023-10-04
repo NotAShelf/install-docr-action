@@ -1,19 +1,51 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Install Docr Action'
+description: 'Install a published Docr release'
+author: 'NotAShelf'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
-    required: true
-    default: '1000'
+  github-repo:
+    description: 'GitHub repository (e.g., owner/repo) to fetch releases from'
+    default: 'NotAShelf/Docr'
 
-# Define your outputs here.
+  install-dir:
+    description: 'Installation directory'
+    default: './'
+
+  template-dir:
+    description: 'HTML/Css Templates directory'
+    defualt: 'templates'
+
+  markdown-dir:
+    description: 'Markdown directory'
+    default: 'markdown'
+
+  output-dir:
+    description: 'Output directory'
+    default: 'output'
+
+  github-username:
+    description: 'GitHub username'
+    required: true
+
+  website-name:
+    description: 'Website name'
+    required: true
+
+  website-url:
+    description: 'Website URL'
+    required: true
+
+  website-description:
+    description: 'Website description'
+    required: true
+
+  timestamps-from-filename:
+    description: 'Extract timestamps from filename (true/false)'
+    required: true
 outputs:
-  time:
-    description: 'Your output description here'
+  installed-version:
+    description: 'The installed version'
 
 runs:
-  using: node20
-  main: dist/index.js
+  using: 'node20'
+  main: 'dist/index.js'
