@@ -2848,8 +2848,6 @@ async function run() {
   }
 }
 
-run()
-
 
 /***/ }),
 
