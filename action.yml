@@ -1,0 +1,52 @@
+name: 'Docr Installer Action'
+description: 'Install a published Docr release'
+author: 'NotAShelf'
+
+inputs:
+  github-repo:
+    description: 'GitHub repository (e.g., owner/repo) to fetch releases from'
+    required: true
+
+  install-dir:
+    description: 'Installation directory'
+    required: true
+
+  github-username:
+    description: 'GitHub username'
+    required: true
+
+  website-name:
+    description: 'Website name'
+    required: true
+
+  template-dir:
+    description: 'Template directory'
+    required: true
+
+  markdown-dir:
+    description: 'Markdown directory'
+    required: true
+
+  output-dir:
+    description: 'Output directory'
+    required: true
+
+  website-url:
+    description: 'Website URL'
+    required: true
+
+  website-description:
+    description: 'Website description'
+    required: true
+
+  timestamps-from-filename:
+    description: 'Timestamps from filename (true/false)'
+    required: true
+
+outputs:
+  installed-version:
+    description: 'The installed version'
+
+runs:
+  using: node20
+  main: dist/index.js
