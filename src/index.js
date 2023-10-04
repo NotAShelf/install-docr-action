@@ -1,4 +1,5 @@
-import { writeFile, createFileStream } from 'fs'
+import { writeFile } from 'fs/promises'
+import { createReadStream, createWriteStream } from 'fs'
 const fs = require('fs')
 
 const core = require('@actions/core')
@@ -16,7 +17,7 @@ process.setMaxListeners(20)
  */
 async function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
-    const file = createFileStream(dest)
+    const file = createWriteStream(dest)
     http
       .get(url, response => {
         response.pipe(file)
@@ -40,7 +41,7 @@ async function downloadFile(url, dest) {
  */
 async function untarFile(tarFile, targetDir) {
   return new Promise((resolve, reject) => {
-    const tarStream = fs.createReadStream(tarFile).pipe(createGunzip())
+    const tarStream = createReadStream(tarFile).pipe(createGunzip())
     const extract = require('tar').Extract({ path: targetDir })
 
     tarStream.pipe(extract)

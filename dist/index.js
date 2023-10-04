@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 241:
+/***/ 351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -135,7 +135,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
-const command_1 = __nccwpck_require__(241);
+const command_1 = __nccwpck_require__(351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(278);
 const os = __importStar(__nccwpck_require__(37));
@@ -2859,35 +2859,6 @@ module.exports = require("zlib");
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -2908,9 +2879,15 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
+// ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(147);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
+
+;// CONCATENATED MODULE: external "fs/promises"
+const promises_namespaceObject = require("fs/promises");
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(147);
+;// CONCATENATED MODULE: ./src/index.js
+
 
 const fs = __nccwpck_require__(147)
 
@@ -2929,7 +2906,7 @@ process.setMaxListeners(20)
  */
 async function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
-    const file = (0,fs__WEBPACK_IMPORTED_MODULE_0__.createFileStream)(dest)
+    const file = (0,external_fs_.createWriteStream)(dest)
     http
       .get(url, response => {
         response.pipe(file)
@@ -2953,7 +2930,7 @@ async function downloadFile(url, dest) {
  */
 async function untarFile(tarFile, targetDir) {
   return new Promise((resolve, reject) => {
-    const tarStream = fs.createReadStream(tarFile).pipe(createGunzip())
+    const tarStream = (0,external_fs_.createReadStream)(tarFile).pipe(createGunzip())
     const extract = (__nccwpck_require__(428).Extract)({ path: targetDir })
 
     tarStream.pipe(extract)
@@ -3046,7 +3023,7 @@ async function run() {
       timestampsFromFilename: timestampsFromFilename === 'true'
     }
 
-    ;(0,fs__WEBPACK_IMPORTED_MODULE_0__.writeFile)(`${installDir}/settings.json`, JSON.stringify(settings, null, 2))
+    ;(0,promises_namespaceObject.writeFile)(`${installDir}/settings.json`, JSON.stringify(settings, null, 2))
   } catch (error) {
     core.setFailed(error.message)
   }
